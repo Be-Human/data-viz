@@ -9,6 +9,7 @@ type ChartType = 'bar' | 'line' | 'pie';
 function App() {
   const [csvInput, setCsvInput] = createSignal<string>(defaultSampleData);
   const [chartType, setChartType] = createSignal<ChartType>('bar');
+  const [selectedDatasetIndex, setSelectedDatasetIndex] = createSignal<number>(0);
 
   const parsedData = createMemo<ParsedData | null>(() => {
     return parseCSV(csvInput());
@@ -16,10 +17,28 @@ function App() {
 
   const handleChartTypeChange = (type: ChartType) => {
     setChartType(type);
+    if (type === 'pie' && parsedData()) {
+      const maxIndex = parsedData()!.datasets.length - 1;
+      if (selectedDatasetIndex() > maxIndex) {
+        setSelectedDatasetIndex(0);
+      }
+    }
   };
 
   const handleCsvChange = (value: string) => {
     setCsvInput(value);
+    setTimeout(() => {
+      if (parsedData()) {
+        const maxIndex = parsedData()!.datasets.length - 1;
+        if (selectedDatasetIndex() > maxIndex) {
+          setSelectedDatasetIndex(0);
+        }
+      }
+    }, 0);
+  };
+
+  const handleDatasetChange = (index: number) => {
+    setSelectedDatasetIndex(index);
   };
 
   const handleUseSampleData = () => {
@@ -144,10 +163,27 @@ function App() {
                 </button>
               </div>
               
+              {chartType() === 'pie' && parsedData() && parsedData()!.datasets.length > 1 && (
+                <div class="dataset-selector">
+                  <span class="dataset-label">选择数据系列：</span>
+                  <div class="dataset-buttons">
+                    {parsedData()!.datasets.map((dataset, index) => (
+                      <button
+                        class={`dataset-btn ${selectedDatasetIndex() === index ? 'active' : ''}`}
+                        onClick={() => handleDatasetChange(index)}
+                      >
+                        {dataset.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+              
               {parsedData() ? (
                 <ChartRenderer 
                   data={parsedData()!} 
                   chartType={chartType()} 
+                  selectedDatasetIndex={selectedDatasetIndex()}
                 />
               ) : (
                 <div class="no-data-message">

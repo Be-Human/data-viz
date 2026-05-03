@@ -352,6 +352,52 @@ body {
   }
 }
 
+/* 数据集选择器样式 */
+.dataset-selector {
+  margin-bottom: 16px;
+  padding: 12px 16px;
+  background-color: #f0f4ff;
+  border-radius: var(--radius-md);
+  border-left: 3px solid var(--primary-color);
+}
+
+.dataset-label {
+  display: block;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  margin-bottom: 10px;
+}
+
+.dataset-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.dataset-btn {
+  padding: 6px 14px;
+  font-size: 13px;
+  font-weight: 500;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+  background-color: var(--surface-color);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.dataset-btn:hover {
+  border-color: var(--primary-color);
+  color: var(--primary-color);
+}
+
+.dataset-btn.active {
+  background-color: var(--primary-color);
+  color: white;
+  border-color: var(--primary-color);
+}
+
 /* 实用类 */
 .flex {
   display: flex;
