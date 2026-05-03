@@ -22,6 +22,7 @@ type ChartType = 'bar' | 'line' | 'pie';
 interface ChartRendererProps {
   data: ParsedData;
   chartType: ChartType;
+  selectedDatasetIndex?: number;
 }
 
 const colors = [
@@ -67,11 +68,16 @@ export const ChartRenderer: Component<ChartRendererProps> = (props) => {
     }));
 
     if (props.chartType === 'pie') {
+      const datasetIndex = props.selectedDatasetIndex ?? 0;
+      const validIndex = datasetIndex >= 0 && datasetIndex < props.data.datasets.length 
+        ? datasetIndex 
+        : 0;
+      
       return {
         labels: props.data.labels,
         datasets: [{
-          label: props.data.datasets[0]?.label || '数据',
-          data: props.data.datasets[0]?.data || [],
+          label: props.data.datasets[validIndex]?.label || '数据',
+          data: props.data.datasets[validIndex]?.data || [],
           backgroundColor: colors.slice(0, props.data.labels.length),
           borderColor: borderColors.slice(0, props.data.labels.length),
           borderWidth: 2,
